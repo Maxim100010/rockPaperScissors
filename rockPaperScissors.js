@@ -1,3 +1,11 @@
+let playerScore = 0;
+let computerScore = 0;
+const newGameButton = document.getElementById('newGame'); //new game button from html
+const controller = new AbortController();
+
+newGameButton.style.display = 'none'; //sets new game button to invisible. Could be done by default in css
+
+//generates a random number from 0 to 2 which determines what the computer plays
 function getComputerChoice(){
     let a = Math.floor(Math.random() * 3);
     if(a === 0){
@@ -12,6 +20,7 @@ function getComputerChoice(){
     return null;
 }
 
+//decides who won by checking what each player played
 function playRound(playerSelection, computerSelection){
     const player = playerSelection.toLowerCase();
     const computer = computerSelection.toLowerCase();
@@ -51,40 +60,79 @@ function playRound(playerSelection, computerSelection){
 
 }
 
-function Game(){
-    let scorePlayer = 0;
-    let scoreComputer = 0;
-    let playerChoice = "";
+const buttons = document.querySelectorAll('div.buttons > button'); //gets rock paper scissors buttons
 
-    for(let i = 0; i < 5; i++){
-        playerChoice = prompt("Input either rock, paper, or scissors");
-        let result = playRound(playerChoice, getComputerChoice())
+//checks which button was clicked and then plays a round with the corresponding choice. Depending on the outcome
+// increases the score of the computer, player or neither
+function play(clickedButton){
+    if(clickedButton.id === 'rock'){
+        let result = playRound('rock', getComputerChoice());
         if(result === 1){
-            scorePlayer++;
+            playerScore += 1;
         }
-        else if(result === 2){
-            scoreComputer++;
+        else if (result === 2){
+            computerScore += 1;
         }
-        console.log("The score is: Player " + scorePlayer.toString() + ":" + scoreComputer.toString() + " Computer");
     }
 
-    let winner = "";
-
-    if(scorePlayer > scoreComputer){
-        winner = "Player";
+    else if(clickedButton.id === 'paper'){
+        let result = playRound('paper', getComputerChoice());
+        if(result === 1){
+            playerScore += 1;
+        }
+        else if (result === 2){
+            computerScore += 1;
+        }
     }
 
-    else if(scorePlayer < scoreComputer){
-        winner = "Computer";
+    else if(clickedButton.id === 'scissors'){
+        let result = playRound('scissors', getComputerChoice());
+        if(result === 1){
+            playerScore += 1;
+        }
+        else if (result === 2){
+            computerScore += 1;
+        }
     }
 
-    else {
-        winner = "No one, it's a tie";
-    }
-
-    console.log("");
-
-    console.log("The FINAL score is: Player " + scorePlayer.toString() + ":" + scoreComputer.toString() + " Computer");
-    console.log("The winner is: " + winner); 
-
+    document.getElementById('player').textContent = playerScore.toString();
+    document.getElementById('computer').textContent = computerScore.toString();
 }
+
+//adds event listeners to rock paper scissors buttons and on each click checks whether the maximum score was reached.
+// if yes, displays the new game button
+Array.from(buttons).forEach(element => {
+    element.addEventListener('click', function () {
+        play(element);
+        if (computerScore === 5 || playerScore === 5){
+            announceWinner();
+            Array.from(buttons).forEach(a => {a.disabled = true;})
+            newGameButton.style.display = 'block';
+        }
+    })
+});
+
+//check which side won the match
+function announceWinner(){
+    
+        if(computerScore === 5){
+            document.getElementById('winner').textContent = 'The computer wins!';
+        }
+        
+        else{
+            document.getElementById('winner').textContent = 'You win!';
+        }
+        
+}
+
+//listener for the new game button which resets the score, hides the winner of the previous game
+// enable the rock paper scissors buttons and hides itself
+newGameButton.addEventListener('click', function() {
+    playerScore = 0;
+    computerScore = 0;
+    document.getElementById('player').textContent = playerScore.toString();
+    document.getElementById('computer').textContent = computerScore.toString();
+    document.getElementById('winner').textContent = '';
+    Array.from(buttons).forEach(a => {a.disabled = false;})
+    newGameButton.style.display = 'none';
+})
