@@ -1,5 +1,6 @@
 let playerScore = 0;
 let computerScore = 0;
+const computerMoveText = document.getElementById('computerMove'); //retrieves the text stating what move the computer played
 const newGameButton = document.getElementById('newGame'); //new game button from html
 const controller = new AbortController();
 
@@ -26,33 +27,33 @@ function playRound(playerSelection, computerSelection){
     const computer = computerSelection.toLowerCase();
 
     if (player === computer){
-        console.log("Nobody wins, it's a tie");
+        computerMoveText.textContent = "The computer played: " + computer.toUpperCase() + " | Nobody wins, it's a tie";
         return 0;
     }
 
     else if(player === "rock" && computer === "scissors"){
-        console.log("you win, rock beats scissors");
+        computerMoveText.textContent = "The computer played: " + computer.toUpperCase() + " | You win, rock beats scissors";
         return 1;
     }
     else if(player === "scissors" && computer === "paper"){
-        console.log("you win, scissors beat paper");
+        computerMoveText.textContent = "The computer played: " + computer.toUpperCase() + " | You win, scissors beat paper";
         return 1;
     }
     else if(player === "paper" && computer === "rock"){
-        console.log("you win, paper beats rock");
+        computerMoveText.textContent = "The computer played: " + computer.toUpperCase() + " | You win, paper beats rock";
         return 1;
     }
 
     else if(player === "paper" && computer === "scissors"){
-        console.log("you lose, scissors beat paper");
+        computerMoveText.textContent = "The computer played: " + computer.toUpperCase() + " | You lose, scissors beat paper";
         return 2;
     }
     else if(player === "rock" && computer === "paper"){
-        console.log("you lose, paper beats rock");
+        computerMoveText.textContent = "The computer played: " + computer.toUpperCase() + " | You lose, paper beats rock";
         return 2;
     }
     else if(player === "scissors" && computer === "rock"){
-        console.log("you lose, rock beats scissors");
+        computerMoveText.textContent = "The computer played: " + computer.toUpperCase() + " | You lose, rock beats scissors";
         return 2;
     }
 
@@ -135,4 +136,5 @@ newGameButton.addEventListener('click', function() {
     document.getElementById('winner').textContent = '';
     Array.from(buttons).forEach(a => {a.disabled = false;})
     newGameButton.style.display = 'none';
+    computerMoveText.textContent = "";
 })
